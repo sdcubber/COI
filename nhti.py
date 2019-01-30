@@ -40,16 +40,22 @@ indexList = ['NAO']
 #%%
 
 # Read in target data: climate indices 
-basedir = '/home/maffie/data/coi/'
-basedir = '/media/maffie/MAFFIE2TB/Projects/COI'
-idir = '{}/ObservedIndices/'.format(basedir)
-figdir = '/home/maffie/plots/coi/nhti'
+#basedir = '/home/maffie/data/coi/'
+#basedir = '/media/maffie/MAFFIE2TB/Projects/COI'
+basedir = './data/'
+
+#idir = '{}/ObservedIndices/'.format(basedir)
+idir = basedir
+
+#figdir = '/home/maffie/plots/coi/nhti'
+figdir = './figs/'
 
 ## Set netcdf input
 ncInputSource = 'NCEP'
 
 if ncInputSource == 'NCEP':
-    netcdfInput = '{}/NCEP/hgt.mon.mean_stdanom.nc'.format(basedir)
+    #netcdfInput = '{}/NCEP/hgt.mon.mean_stdanom.nc'.format(basedir)
+    netcdfInput = '{}/hgt.mon.mean_stdanom.nc'.format(basedir)
 
 #%%
 
