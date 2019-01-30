@@ -6,11 +6,12 @@ import numpy as np
 from sklearn.linear_model import RidgeCV
 from sklearn.decomposition import PCA
 
+
 class PCRR(object):
     """Class that implements principal component ridge regression"""
     def __init__(self, n_comp=20):
-        self.n_comp=n_comp
-        
+        self.n_comp = n_comp
+
     def fit(self, X_train, y_train):
         # Fit the encoder
         self.encoder = PCA(n_components=self.n_comp)
@@ -20,19 +21,19 @@ class PCRR(object):
         self.X_train_encoded = self.encoder.transform(X_train)
 
         # Fit the regularized regressor
-        self.regressor = RidgeCV(alphas=np.logspace(-5,5,100))
+        self.regressor = RidgeCV(alphas=np.logspace(-5, 5, 100))
         self.regressor.fit(self.X_train_encoded, y_train)
-        
+
     def predict(self, X_test):
         try:
             self.X_test_encoded = self.encoder.transform(X_test)
             self.predictions = self.regressor.predict(self.X_test_encoded)
-        
+
         except AttributeError:
             print('Fit the model first.')
 
 
-# Read in target data: climate indices 
+# Read in target data: climate indices
 idir = '/media/maffie/MAFFIE2TB/Projects/COI/ObservedIndices/'
 idirncep = '/media/maffie/MAFFIE2TB/Projects/COI/NCEP/'
 figdir = '/home/maffie/plots/coi/'
@@ -41,7 +42,7 @@ idir = './'
 idirncep = './'
 figdir = './'
 
-indices = pd.read_csv(idir+'tele_index.nh_195001-201709.csv')
+indices = pd.read_csv(idir + 'tele_index.nh_195001-201709.csv')
 
 # Drop year and month columns, replace with a datetime index
 # So that it corresponds with the time dimension in the .nc file with input data
@@ -72,14 +73,15 @@ index_missing_train = y_train_raw.isnull()
 index_missing_test = y_test_raw.isnull()
 
 # Input data: standardized anomalies + absolute pressure values for plotting
-x_train_raw = np.squeeze(np.array(ncep_hgt_anom['hgt'].sel(time=slice('1950','1999'))))
-x_test_raw  = np.squeeze(np.array(ncep_hgt_anom['hgt'].sel(time=slice('2000','2016'))))
+x_train_raw =\
+    np.squeeze(np.array(ncep_hgt_anom['hgt'].sel(time=slice('1950', '1999'))))
+x_test_raw =\
+    np.squeeze(np.array(ncep_hgt_anom['hgt'].sel(time=slice('2000', '2016'))))
 
 x_train_flat = np.reshape(x_train_raw, (x_train_raw.shape[0], -1))
 x_test_flat = np.reshape(x_test_raw, (x_test_raw.shape[0], -1))
 
-
+# Instatiate the model
 model = PCRR()
-model.fit(x_train_flat,y_train)
+model.fit(x_train_flat, y_train)
 model.predict(x_test_flat)
-
